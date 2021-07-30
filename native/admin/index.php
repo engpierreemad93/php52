@@ -1,3 +1,4 @@
+<?php session_start();?>
 <?php require "config.php"?>
 <?php 
 // echo  $_SERVER['REQUEST_METHOD'];
@@ -12,7 +13,11 @@ if($_SERVER['REQUEST_METHOD'] == 'POST'){
     // echo "</pre>";
     $count =$stmt->rowCount();
     if($count == 1){
-        header('location:dashboard.php');
+         $_SESSION['USERNAME'] = $username ;
+         $_SESSION['EMAIL'] = $row['email'];
+         $_SESSION['FULLNAME'] = $row['fullname'];
+         $_SESSION['ROLE'] = $row['role'];
+         header('location:dashboard.php');
     }else{
         echo "sorry";
     }
