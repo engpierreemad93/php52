@@ -11,7 +11,8 @@ $action= isset($_GET['do'])?$_GET['do']:'index';
 <?php if($action == 'index'):?>
 <!-- Show all users page-->
 <?php 
-   $stmt= $connection->prepare('SELECT * FROM users WHERE role=3');
+   $user=3;
+   $stmt= $connection->prepare('SELECT * FROM users WHERE role ='.$user);
    $stmt->execute();
    $users= $stmt->fetchAll();  
    ?>
@@ -31,10 +32,15 @@ $action= isset($_GET['do'])?$_GET['do']:'index';
                 <td><?= $user['username']?></td>
                 <td><?= $user['email']?></td>
                 <td><?= $user['created_at']?></td>
-                <td>
+                <td> 
                     <a class="btn btn-info" href="members.php?do=show&selection=<?= $user['user_id']?>">show</a>
-                    <a class="btn btn-warning" href="members.php?do=edit&selection=<?= $user['user_id']?>">edit</a>
-                    <a class="btn btn-danger" href="#">delete</a>
+                    <?php
+                       $isAdmin = 1 ; 
+                       if($_SESSION['ROLE'] == $isAdmin):
+                       ?>
+                        <a class="btn btn-warning" href="members.php?do=edit&selection=<?= $user['user_id']?>">edit</a>
+                        <a class="btn btn-danger" href="members.php?do=delete&selection=<?= $user['user_id']?>">delete</a>
+                    <?php endif?>    
                 </td>
             </tr>
             <?php endforeach?>
@@ -93,25 +99,29 @@ $action= isset($_GET['do'])?$_GET['do']:'index';
            $count = $stmt->rowCount(); 
     ?>
         <!-- if condition that display user if in DB-->
-        <?php if($count == 1):?>
+        <?php
+          $inDB = 1;
+          if($count == $inDB):
+          ?>
         <div class="container">
             <h1>Edit user</h1>
-            <form method="post" action="members.php?do=store">
+            <form method="post" action="members.php?do=update">
+                <input type="hidden" value="<?= $user['user_id']?>" name="userid">
                 <div class="mb-3">
                     <label class="form-label">username</label>
-                    <input type="text" class="form-control" value="<?= $user['username']?>">
+                    <input type="text" class="form-control" value="<?= $user['username']?>" name="username">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Email address</label>
-                    <input type="email" class="form-control" value="<?= $user['email']?>">
+                    <input type="email" class="form-control" value="<?= $user['email']?>" name="email">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Password</label>
-                    <input type="password" class="form-control" value="<?= $user['password']?>">
+                    <input type="password" class="form-control" value="<?= $user['password']?>" name="password">
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Fullname</label>
-                    <input type="text" class="form-control" value="<?= $user['fullname']?>">
+                    <input type="text" class="form-control" value="<?= $user['fullname']?>" name="fullname">
                 </div>
                 <button type="submit"  class="btn btn-primary">Update</button> 
                 <a class="btn btn-dark" href="members.php">back</a>
@@ -122,6 +132,20 @@ $action= isset($_GET['do'])?$_GET['do']:'index';
         <?php endif?>    
 
 <?php elseif($action == 'update'):?>
+    <?php 
+      if($_SERVER['REQUEST_METHOD'] == 'POST'){
+        $userid = $_POST['userid'] ;
+        $username = $_POST['username'];
+        $password =$_POST['password'];
+        $email =  $_POST['email'];
+        $fullname = $_POST['fullname'];
+
+        $stmt = $connection->prepare('UPDATE users SET username=? , password=? , email=? , fullname=? WHERE  user_id=?');
+        $stmt->execute(array($username , $password  , $email , $fullname , $userid ));
+        header('location:members.php?do=edit');
+
+      }     
+    ?>
 <?php elseif($action == 'show'):?>
     <?php 
         //for security wiase 
@@ -159,6 +183,14 @@ $action= isset($_GET['do'])?$_GET['do']:'index';
     <?php header('location:members.php')?>
     <?php endif?>
 <?php elseif($action == 'delete'):?>
+    <?php 
+        $userid = isset($_GET['selection']) && is_numeric($_GET['selection'])?intval($_GET['selection']):0;
+        $stmt= $connection->prepare('DELETE FROM users WHERE user_id=?');
+        $stmt->execute(array($userid));
+        header('location:members.php');
+        
+     ?>
+    
 <?php else:?>
 <h1>404 Page not found</h1>
 <?php endif?>
