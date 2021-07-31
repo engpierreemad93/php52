@@ -32,8 +32,8 @@ $action= isset($_GET['do'])?$_GET['do']:'index';
                 <td><?= $user['email']?></td>
                 <td><?= $user['created_at']?></td>
                 <td>
-                    <a class="btn btn-info" href="#">show</a>
-                    <a class="btn btn-warning" href="#">edit</a>
+                    <a class="btn btn-info" href="members.php?do=show&selection=<?= $user['user_id']?>">show</a>
+                    <a class="btn btn-warning" href="members.php?do=edit&selection=<?= $user['user_id']?>">edit</a>
                     <a class="btn btn-danger" href="#">delete</a>
                 </td>
             </tr>
@@ -43,13 +43,121 @@ $action= isset($_GET['do'])?$_GET['do']:'index';
     <a class="btn btn-primary" href="members.php?do=create">add user</a>
 </div>
 <?php elseif($action == 'create'):?>
-     <!-- this is form display to end user-->  
+<!-- this is form display to end user-->
+<div class="container">
+    <h1>Add user</h1>
+    <form method="post" action="members.php?do=store">
+        <div class="mb-3">
+            <label class="form-label">username</label>
+            <input type="text" class="form-control" name="username">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Email address</label>
+            <input type="email" class="form-control" name="useremail">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-control" name="userpassword">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Fullname</label>
+            <input type="text" class="form-control" name="userfullname">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
 <?php elseif($action == 'store'):?>
-    <!-- this form for coding operation-->  
+<!-- this form for coding operation-->
+<?php 
+  if($_SERVER['REQUEST_METHOD']=='POST'){
+     $username = $_POST['username'];
+     $email = $_POST['useremail'];
+     $password= sha1($_POST['userpassword']);
+     $fullname =$_POST['userfullname'];
+     $stmt= $connection->prepare("INSERT INTO users (username , password , email , fullname , created_at , role) 
+                                  VALUES (? ,  ? , ? , ? ,now() , 3)
+                                ");
+     $stmt->execute(array($username ,  $password , $email ,$fullname));
+     header('location:members.php?do=create');
+  }
+
+?>
 
 <?php elseif($action == 'edit'):?>
+    <?php 
+           //for security wiase 
+           $userid = isset($_GET['selection']) && is_numeric($_GET['selection'])?intval($_GET['selection']):0;
+           $stmt=$connection->prepare('SELECT * FROM users WHERE user_id=?');
+           $stmt->execute(array($userid));
+           $user = $stmt->fetch();
+           $count = $stmt->rowCount(); 
+    ?>
+        <!-- if condition that display user if in DB-->
+        <?php if($count == 1):?>
+        <div class="container">
+            <h1>Edit user</h1>
+            <form method="post" action="members.php?do=store">
+                <div class="mb-3">
+                    <label class="form-label">username</label>
+                    <input type="text" class="form-control" value="<?= $user['username']?>">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email address</label>
+                    <input type="email" class="form-control" value="<?= $user['email']?>">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-control" value="<?= $user['password']?>">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Fullname</label>
+                    <input type="text" class="form-control" value="<?= $user['fullname']?>">
+                </div>
+                <button type="submit"  class="btn btn-primary">Update</button> 
+                <a class="btn btn-dark" href="members.php">back</a>
+            </form>
+        </div>
+        <?php  else:?>
+        <?php header('location:members.php')?>
+        <?php endif?>    
+
 <?php elseif($action == 'update'):?>
 <?php elseif($action == 'show'):?>
+    <?php 
+        //for security wiase 
+        $userid = isset($_GET['selection']) && is_numeric($_GET['selection'])?intval($_GET['selection']):0;
+        $stmt = $connection->prepare('SELECT * FROM users WHERE user_id =? ');
+        $stmt->execute(array($userid));
+        $user=$stmt->fetch();
+        $count = $stmt->rowCount();
+    ?>
+    <!-- if condition that display user if in DB-->
+    <?php if($count == 1):?>
+    <div class="container">
+        <h1>Show user</h1>
+        <form method="post" action="members.php?do=store">
+            <div class="mb-3">
+                <label class="form-label">username</label>
+                <input type="text" class="form-control" value="<?= $user['username']?>">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Email address</label>
+                <input type="email" class="form-control" value="<?= $user['email']?>">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-control" value="<?= $user['password']?>">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Fullname</label>
+                <input type="text" class="form-control" value="<?= $user['fullname']?>">
+            </div>
+            <a class="btn btn-dark" href="members.php">back</a>
+        </form>
+    </div>
+    <?php  else:?>
+    <?php header('location:members.php')?>
+    <?php endif?>
 <?php elseif($action == 'delete'):?>
 <?php else:?>
 <h1>404 Page not found</h1>
