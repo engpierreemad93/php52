@@ -1,5 +1,13 @@
 <!doctype html>
-<html lang="en">
+<html
+   <?php  if($_SESSION['LANG'] == 'ar'):?>
+      lang="ar" dir="rtl"
+    <?php else:?>  
+      lang="en" dir="ltr"
+    <?php  endif?>
+
+
+>
   <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
