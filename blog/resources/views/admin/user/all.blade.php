@@ -16,8 +16,8 @@
                                 <th>ID</th>
                                 <th>Name</th>
                                 <th>email</th>
-                                <th></th>
-                                <th></th>
+                                <th>created_at</th>
+                                <th>action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -26,13 +26,14 @@
                                 <td></td>
                                 <td>{{$user->name }}</td>
                                 <td>{{$user->email }}</td>
+                                <td>{{$user->created_at->diffForHumans()}}</td>
                                 <td></td>
                             </tr>
                             @endforeach
                         </tbody>
                     </table>
                 </div>
-                <a href="user/create">add user</a>
+                <a href="{{route('user.create')}}">add user</a>
             </div>
         </div>
     </div>

@@ -37,7 +37,7 @@
             <div class="row">
                 <div class="col-md-12">
                   <div class="form-group bmd-form-group">
-                    <label class="bmd-label-floating">Passowrd</label>
+                    <label class="bmd-label-floating">Password</label>
                     <input type="password" class="form-control" name="password">
                     @error('password')
                       <div class="text-danger"> 
