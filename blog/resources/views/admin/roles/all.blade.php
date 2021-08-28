@@ -11,13 +11,9 @@
         <tbody> 
          @foreach ($roles as $role)
             <tr> 
-                {{-- @for ( $i=1 ;  $i <= $rolesCount ; $i++)
-                    <td>
-                        {{$i}}
-                    </td>
-                @endfor   --}}
+             
                 <td></td>
-                <td>{{$role->role_name}}</td>
+                <td>{{$role->name}}</td>
                 <td>
                     <div class="d-flex">
                         <a class="btn btn-info" href="{{route('role.show' , $role->id)}}">Show</a>
