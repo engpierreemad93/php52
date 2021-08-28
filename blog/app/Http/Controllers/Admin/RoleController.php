@@ -51,8 +51,13 @@ class RoleController extends Controller
      */
     public function show($id)
     {
-    
-        return view('admin.roles.show');
+       $users = Role::findOrFail($id)->with([
+           'user'  => function($query){
+               $query->select('id' , 'name' , 'email' , 'role_id');
+           }
+       ])->get();
+          return response()->json($users);
+        // return view('admin.roles.show');
     }
 
     /**

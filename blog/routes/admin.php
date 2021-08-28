@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Models\User;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,5 +24,14 @@ Route::prefix('admin')->group(function(){
  
  Route::resource('/user' , UserController::class);
  Route::resource('/role' , RoleController::class);
-      
+   //for test only 
+   Route::get('/hasmanyinverse/{id}' , function($id){
+       $role = User::find($id)->with([
+           'role' => function($query){
+               $query->select('id' , 'name');
+           }
+       ])->get();
+
+       return response()->json($role);
+   });   
 });
