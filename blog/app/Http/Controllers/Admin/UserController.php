@@ -73,6 +73,8 @@ class UserController extends Controller
     public function show($id)
     {
         //
+        $user = User::findOrFail($id);
+        return view('admin.user.show' , compact('user'));
     }
 
     /**
@@ -84,6 +86,8 @@ class UserController extends Controller
     public function edit($id)
     {
         //
+        $user = User::findOrFail($id);
+        return view('admin.user.edit' , compact('user'));
     }
 
     /**
@@ -96,6 +100,22 @@ class UserController extends Controller
     public function update(Request $request, $id)
     {
         //
+        $data = $request->all(); 
+        $rules = [
+            'name' => ['required' ,'min:4' , 'max:25'] , 
+            'email' => ['required' , 'unique:users'] , 
+        ]; 
+        $validator =Validator::make($data , $rules) ;
+        if($validator->fails()){
+            return redirect()->back()->withErrors($validator)->withInput($data);
+        }
+
+        $user = User::findOrFail($id);
+        $user->update([
+            "name" => $request->name , 
+            "email" =>$request->email 
+        ]);
+        return redirect()->back();
     }
 
     /**
@@ -106,6 +126,9 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // 
+        $user = User::findOrFail($id);
+        $user->delete();
+        return redirect()->back();
     }
 }

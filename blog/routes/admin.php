@@ -18,7 +18,7 @@ use App\Http\Controllers\Admin\DashboardController;
 
 Route::prefix('admin')->group(function(){
 
- Route::get('/' , [DashboardController::class , 'index']);
+ Route::get('/' , [DashboardController::class , 'index'])->name('dashboard');
  
  Route::resource('/user' , UserController::class);
       
