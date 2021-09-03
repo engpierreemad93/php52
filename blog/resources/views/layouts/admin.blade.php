@@ -40,6 +40,12 @@
               <p>Users</p>
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{route('role.index')}}">
+              <i class="material-icons">person</i>
+              <p>Role</p>
+            </a>
+          </li>
           <!-- your sidebar here -->
         </ul>
       </div>
@@ -59,13 +65,27 @@
           </button>
           <div class="collapse navbar-collapse justify-content-end">
             <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link" href="javascript:void(0)">
-                  <i class="material-icons">notifications</i>
+              <li class="nav-item dropdown">
+                <a class="nav-link" href="javscript:void(0)" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <i class="material-icons">person</i>
+                  <span class="notification">5</span>
                   <p class="d-lg-none d-md-block">
-                    Notifications
+                    Some Actions
                   </p>
-                </a>
+                <div class="ripple-container"></div></a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
+                  <a class="dropdown-item" href="javscript:void(0)">Hello {{ Auth::user()->name }}</a>
+                  <a class="dropdown-item" href="{{route('home')}}">Visit site</a>
+                  <a class="dropdown-item" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                        {{ __('Logout') }}
+                                    </a>
+
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
+                </div>
               </li>
               <!-- your navbar here -->
             </ul>
@@ -104,9 +124,9 @@
   </div>
   <!--   Core JS Files   -->
   <script src="{{URL::asset('adminpanel/js/core/jquery.min.js')}}"></script>
-  <script src="./assets/js/core/popper.min.js"></script>
-  <script src="./assets/js/core/bootstrap-material-design.min.js"></script>
-  <script src="https://unpkg.com/default-passive-events"></script>
+  <script src="{{URL::asset('adminpanel/js/core/popper.min.js')}}"></script>
+  <script src="{{URL::asset('adminpanel/js/core/bootstrap-material-design.min.js')}}"></script>
+  <script src="https://uxnpkg.com/default-passive-events"></script>
   <script src="./assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
   <!-- Place this tag in your head or just before your close body tag. -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
@@ -117,7 +137,7 @@
   <!--  Notifications Plugin    -->
   <script src="./assets/js/plugins/bootstrap-notify.js"></script>
   <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="./assets/js/material-dashboard.js?v=2.1.0"></script>
+  <script src="{{URL::asset('adminpanel/js/material-dashboard.js')}}"></script>
   <!-- Material Dashboard DEMO methods, don't include it in your project! -->
   <script src="./assets/demo/demo.js"></script>
   <script>

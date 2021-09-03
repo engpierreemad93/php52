@@ -47,6 +47,20 @@
                   </div>
                 </div>
               </div>
+              <div class="row">
+                <div class="col-md-12">
+                    <select name="role">
+                        @foreach ($roles as  $role)
+                            <option value="{{$role->id}}">{{$role->name}}</option>
+                        @endforeach
+                    </select>
+                    @error('role')
+                    <div class="text-danger"> 
+                        {{$message}}
+                    </div>   
+                @enderror
+                </div>
+             </div>
             <button type="submit" class="btn btn-primary pull-right">Submit Profile</button>
             <div class="clearfix"></div>
           </form>

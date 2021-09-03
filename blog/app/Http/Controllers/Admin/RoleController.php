@@ -18,8 +18,7 @@ class RoleController extends Controller
     {
         // 
         $roles= Role::all();
-        $rolesCount = Role::get()->count() ;
-        return view('admin.roles.all' , compact('roles' , 'rolesCount'));
+        return view('admin.roles.all' , compact('roles'));
     }
 
     /**
@@ -55,7 +54,7 @@ class RoleController extends Controller
            'user'  => function($query){
                $query->select('id' , 'name' , 'email' , 'role_id');
            }
-       ])->get();
+       ])->where('id' , $id)->get();
           return response()->json($users);
         // return view('admin.roles.show');
     }

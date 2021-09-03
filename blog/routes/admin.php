@@ -18,7 +18,7 @@ use App\Models\User;
 */
 
 
-Route::prefix('admin')->group(function(){
+Route::middleware(['auth' , 'isAdmin'])->prefix('admin')->group(function(){
 
  Route::get('/' , [DashboardController::class , 'index'])->name('dashboard');
  

@@ -1,5 +1,11 @@
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html
+  @if (LaravelLocalization::getCurrentLocale() == 'ar')
+    lang="ar" dir="rtl"
+ @else
+ lang="en" dir="ltr"   
+  @endif
+>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -10,14 +16,21 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Scripts -->
+    @if (LaravelLocalization::getCurrentLocale() == 'ar')
+    <!-- Styles -->
+    <link href="{{ asset('css/app-rtl.css') }}" rel="stylesheet">
+        
+    @else
+            <!-- Styles -->
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    @endif
     <script src="{{ asset('js/app.js') }}" defer></script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
 
-    <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
 </head>
 <body>
     <div id="app">
@@ -58,11 +71,22 @@
                                 </a>
 
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                    @if (Auth::user()->role_id !=3)
+                                        <a class="dropdown-item" href="{{route('dashboard')}}">Dashboard</a>
+                                    @endif
+
+                                    @if (LaravelLocalization::getCurrentLocale() == 'ar')
+                                        <a  class="dropdown-item" href="{{ LaravelLocalization::getLocalizedURL('en')}}"> English</a>
+                                    @else 
+                                     <a  class="dropdown-item" href="{{ LaravelLocalization::getLocalizedURL('ar')}}"> العربية</a>
+                                    @endif
+
                                     <a class="dropdown-item" href="{{ route('logout') }}"
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
+                                   
 
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf

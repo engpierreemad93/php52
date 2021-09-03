@@ -28,15 +28,21 @@
                                 <td>{{$user->email }}</td>
                                 <td>{{$user->created_at->diffForHumans()}}</td>
                                 <td>
-                                    {{-- {{url('admin/user/'.$user->id)}} --}}
-                                    <a class="btn btn-info" href="{{route('user.show' , $user->id)}} ">show</a>
-                                    <a class="btn btn-warning" href="{{route('user.edit' , $user->id)}}">Edit</a>
-                                    {{-- <a class="btn btn-danger" href="">Delete</a> --}}
-                                    <form method="post" action="{{ route('user.destroy' , $user->id)}}">
-                                         @csrf
-                                         @method('DELETE')
-                                         <button type="submit" class="btn btn-danger">Delete</button>
-                                    </form>
+                                    <div class="container">
+                                        <div class="row">
+                                            {{-- {{url('admin/user/'.$user->id)}} --}}
+                                            <a class="btn btn-info" href="{{route('user.show' , $user->id)}} ">show</a>
+                                            <a class="btn btn-warning"
+                                                href="{{route('user.edit' , $user->id)}}">Edit</a>
+                                            {{-- <a class="btn btn-danger" href="">Delete</a> --}}
+                                            <form method="post" action="{{ route('user.destroy' , $user->id)}}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger">Delete</button>
+                                            </form>
+                                        </div>
+                                    </div>
+
                                 </td>
                             </tr>
                             @endforeach

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\Role;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -31,7 +32,8 @@ class UserController extends Controller
     public function create()
     {
         //
-        return view('admin.user.create');
+        $roles = Role::all();
+        return view('admin.user.create', compact('roles'));
 
     }
 
@@ -49,6 +51,8 @@ class UserController extends Controller
             'name' => ['required' ,'min:4' , 'max:25'] , 
             'email' => ['required' , 'unique:users'] , 
             'password' =>['required'] , 
+            'role' => ['required']
+
         ]; 
         $validator =Validator::make($data , $rules) ;
         if($validator->fails()){
@@ -58,6 +62,7 @@ class UserController extends Controller
             'name' => $request->name ,
             'email' => $request->email , 
             'password' => Hash::make($request->password) ,
+            'role_id' => $request->role ,
 
         ]);
         return redirect()->back();
